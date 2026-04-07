@@ -28,3 +28,8 @@ _Please leave your feedback below:_
 - [ ] Confirm markdown rendering behaves correctly with newly added content.
 - [ ] Verify portfolio JSON tracking aligns with latest DevOps standards.
 - [x] Fixed blank screen bug: Replaced `gray-matter` with a custom lightweight `parseFrontmatter` utility to resolve Node.js dependency crashes (like `buffer`) in the Vite/React browser environment.
+
+## Deployment
+- **URL**: https://nupamo.github.io/pamomo-blog/
+- **Renaming**: Changed project name from 'dev-blog' to 'Pamomo's Blog' (UI title) and '파모모의 블로그' (Navbar brand).
+- **Hosting**: GitHub Pages via `gh-pages` branch, configured with `vite.config.ts` base path `/pamomo-blog/`.

@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import { Calendar } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 import { parseFrontmatter } from '../utils/frontmatter';
 
@@ -15,12 +14,11 @@ const mdModules = import.meta.glob('/src/posts/*.md', { query: '?raw', eager: tr
 
 const posts: PostMeta[] = Object.entries(mdModules).map(([path, content]) => {
   const id = path.split('/').pop()?.replace('.md', '') || '';
-  // content is the module, content.default is the raw string when using ?raw
   const fileContent = (content as any).default as string;
   const { data } = parseFrontmatter(fileContent);
   return {
     id,
-    title: data.title || 'Untitled',
+    title: data.title || '제목 없음',
     date: data.date || new Date().toISOString(),
     excerpt: data.excerpt || '',
     author: data.author || 'Unknown'
@@ -30,40 +28,32 @@ const posts: PostMeta[] = Object.entries(mdModules).map(([path, content]) => {
 export default function PostList() {
   return (
     <div className="space-y-8">
-      <header className="mb-10">
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">Latest Posts</h1>
-        <p className="mt-4 text-lg text-gray-600">Thoughts, learnings, and technical deep-dives.</p>
+      <header className="mb-10 border-b border-gray-800 pb-6">
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-100 tracking-tight">Post List</h1>
+        <p className="mt-4 text-lg text-gray-400">개발, 회고, 그리고 여러 가지 이야기들 ✨</p>
       </header>
 
-      <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-2">
+      <div className="flex flex-col gap-2">
         {posts.map((post) => (
           <article 
             key={post.id} 
-            className="bg-white rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow p-6 flex flex-col"
+            className="group flex flex-col sm:flex-row sm:items-center justify-between p-4 -mx-4 rounded-lg hover:bg-gray-800/50 transition-colors border-b border-gray-800/50 last:border-0"
           >
             <div className="flex-grow">
-              <div className="flex items-center gap-2 text-sm text-gray-500 mb-3">
-                <Calendar size={16} />
-                <time dateTime={post.date}>
-                  {format(parseISO(post.date), 'MMMM d, yyyy')}
-                </time>
-              </div>
-              <h2 className="text-xl font-bold text-gray-900 mb-3">
-                <Link to={`/post/${post.id}`} className="hover:text-brand-600 focus:outline-none focus:underline">
+              <h2 className="text-lg font-semibold text-gray-200 group-hover:text-brand-400 transition-colors mb-1">
+                <Link to={`/post/${post.id}`} className="focus:outline-none focus:underline block">
                   {post.title}
                 </Link>
               </h2>
-              <p className="text-gray-600 line-clamp-3 mb-4">
+              <p className="text-sm text-gray-500 line-clamp-1">
                 {post.excerpt}
               </p>
             </div>
-            <Link 
-              to={`/post/${post.id}`} 
-              className="inline-flex items-center text-brand-600 font-semibold hover:text-brand-700 focus:outline-none focus:underline mt-auto"
-              aria-label={`Read more about ${post.title}`}
-            >
-              Read article &rarr;
-            </Link>
+            <div className="mt-2 sm:mt-0 sm:ml-4 flex-shrink-0 text-sm text-gray-400">
+              <time dateTime={post.date}>
+                {format(parseISO(post.date), 'yyyy. MM. dd')}
+              </time>
+            </div>
           </article>
         ))}
       </div>

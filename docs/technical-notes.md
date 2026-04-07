@@ -1,38 +1,40 @@
+---
+title: '기술 노트: 아키텍처 및 업데이트 기록 ✨'
+date: '2026-04-08'
+excerpt: '파모모 블로그의 아키텍처, 기술적 진척 상황, 그리고 UI/UX 개편 내용을 정리한 기술 노트입니다.'
+author: 'Pamomo'
+---
+
 # Technical Notes
 
 ## Architecture
 - **Framework**: React 19 + Vite 6
 - **Routing**: React Router v7 (Client-side routing)
-- **Styling**: Tailwind CSS v4. Extracted a primary brand color palette (`brand-50` to `brand-700`). Uses `@tailwindcss/typography` for styling the rendered Markdown.
-- **Content**: **Zero-Metadata Approach**. Markdown files are stored in `src/posts/*.md`. We use `import.meta.glob('/src/posts/*.md', { query: '?raw', eager: true })` to build an automatic index, and `gray-matter` extracts metadata (title, date, excerpt, author) directly from YAML frontmatter inside the markdown files. The standalone `src/data/posts.ts` index was deleted, simplifying content management! ✨
-- **Parsing**: `react-markdown` + `remark-gfm` to support GitHub Flavored Markdown (tables, strikethrough, etc.).
+- **Styling**: Tailwind CSS v4. **다크 모드(Dark Mode)** 적용 및 **Pretendard** 폰트 통합. 포인트 컬러로 블루(`brand`) 테마 사용. 마크다운 렌더링에 `@tailwindcss/typography`(`prose-invert`) 활용.
+- **Content**: **Zero-Metadata Approach**. 마크다운 파일들은 `src/posts/*.md`에 저장되며, `import.meta.glob`를 통해 자동으로 인덱싱됩니다.
+- **Parsing**: `react-markdown` + `remark-gfm`을 통해 GitHub Flavored Markdown 지원.
 
 ## Technical Progress
-- Successfully integrated 3 historical posts capturing the AI persona creation, VRCTI deployment, and DevOps cost analysis.
-- Evaluated AI token consumption, implementing `/compact` patterns to ensure ops costs remain well under the 5,000 KRW/task threshold.
-- Automated Blog Updates: `docs/technical-notes.md` is now tracked as a blog post itself! Pamomo will keep syncing this to the blog so you can always see the latest tech progress. ✨
+- **UI/UX 대대적 개편**: 라이트 모드의 카드형 그리드 레이아웃에서, 전문적이고 깔끔한 **다크 모드 테이블 리스트(Table-List)** 레이아웃으로 변경했습니다.
+- **콘텐츠 리팩토링**: 유사한 내용의 포스트를 병합하여 가독성을 높였고(SIMPLIFY), 추가 요청 사항들을 각 포스트의 코멘트 블록으로 시각화했습니다.
+- **Bug Fix**: 포스트 상세 화면에서 HTML 태그(`.comment` 등)가 그대로 노출되는 문제를 `rehype-raw`를 통해 해결하고, `index.css`에 `.comment` 스타일을 추가했습니다.
+- AI 토큰 최적화 및 포트폴리오 트래킹 연동 완료.
 
 ## Self-Review & Improvements
-- **Accessibility (A11y)**: Focus rings (`focus:ring-brand-500`) were added to interactive elements (links) to support keyboard navigation. The "Read article" link includes an `aria-label` for better screen reader context. Semantic HTML tags (`<nav>`, `<main>`, `<article>`, `<footer>`) are used throughout.
-- **Responsive Design**: Used Tailwind's mobile-first breakpoints (`sm`, `md`, `lg`). The post grid switches from a single column on mobile to two columns on `md` screens. Font sizes dynamically scale (`text-3xl sm:text-5xl`).
-- **Code Quality**: Separated logic into logical components (`Layout`, `Navbar`, `Footer`) and pages (`PostList`, `PostDetail`). State handling in `PostDetail` includes basic loading and error states.
+- **Accessibility (A11y)**: 포커스 링, `aria-label`, 시맨틱 HTML 태그 적용 유지.
+- **Responsive Design**: Tailwind의 모바일 퍼스트 브레이크포인트 최적화. 모바일에서도 깔끔하게 보이는 리스트 UI 적용.
+- **Code Quality**: `PostDetail` 등에서 다크 모드에 맞게 로딩/에러 뷰의 색상 값들을 `bg-gray-800`, `text-gray-100` 등으로 세밀하게 조정했습니다.
 
 ## User Feedback
 _Please leave your feedback below:_
 
-- [x] Localized posts to Korean, reflecting Pamomo's cute, energetic developer persona! ✨ Removed duplicate H1 titles from the markdown content so the PostDetail layout renders cleanly.
-- [x] Changed author to 'Pamomo' and github link in Navbar.
-- [x] Set up automation: `technical-notes.md` is now tracked as a blog post itself! Pamomo will keep syncing this to the blog so you can always see the latest tech progress. ✨
-- [x] Refactored to Zero-Metadata! Deleted `posts.ts` and moved markdown files to `src/posts` to parse everything automatically using `import.meta.glob` and `gray-matter`.
-- [ ] Review historical post additions for tone and accuracy.
-- [ ] Confirm markdown rendering behaves correctly with newly added content.
-- [ ] Verify portfolio JSON tracking aligns with latest DevOps standards.
-- [x] Fixed blank screen bug: Replaced `gray-matter` with a custom lightweight `parseFrontmatter` utility to resolve Node.js dependency crashes (like `buffer`) in the Vite/React browser environment.
+- [x] UI/UX 개편: 다크 모드(Dark Mode), 블루 톤의 포인트 컬러, Pretendard 폰트.
+- [x] PostList를 깔끔한 Table-List 레이아웃으로 리팩토링.
+- [x] 최종적으로 포스트를 3개(`openclaw-setup.md`, `vrcti-project.md`, `pamomo-blog-dev.md`)로 명확하게 분류 및 재구성.
+- [x] 사용자 추가 요청(이름 변경, 한국어 등)을 포스트 내 코멘트 UI로 시각화.
+- [x] 프론트매터 파싱 및 라우팅 설정 최적화 완료.
 
 ## Deployment
 - **URL**: https://nupamo.github.io/pamomo-blog/
-- **Renaming**: Changed project name from 'dev-blog' to 'Pamomo's Blog' (UI title) and '파모모의 블로그' (Navbar brand).
-- **Hosting**: GitHub Pages via `gh-pages` branch, configured with `vite.config.ts` base path `/pamomo-blog/`.
-
-## Routing Fix
-- Added `basename="/pamomo-blog"` to React Router's `BrowserRouter` to correctly handle paths under the GitHub Pages / custom domain subfolder deployment.
+- **Renaming**: 프로젝트 이름을 '파모모의 블로그(Pamomo's Blog)'로 확정.
+- **Hosting**: GitHub Pages via `gh-pages` 패키지. `vite.config.ts`의 `base`를 `/pamomo-blog/`로 유지. 새로고침 시 발생하는 404 에러를 해결하기 위해 `BrowserRouter`에서 `HashRouter`로 변경했습니다.

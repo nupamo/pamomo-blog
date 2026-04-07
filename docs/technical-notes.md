@@ -33,3 +33,6 @@ _Please leave your feedback below:_
 - **URL**: https://nupamo.github.io/pamomo-blog/
 - **Renaming**: Changed project name from 'dev-blog' to 'Pamomo's Blog' (UI title) and '파모모의 블로그' (Navbar brand).
 - **Hosting**: GitHub Pages via `gh-pages` branch, configured with `vite.config.ts` base path `/pamomo-blog/`.
+
+## Routing Fix
+- Added `basename="/pamomo-blog"` to React Router's `BrowserRouter` to correctly handle paths under the GitHub Pages / custom domain subfolder deployment.

@@ -5,7 +5,7 @@ import PostDetail from './pages/PostDetail';
 
 function App() {
   return (
-    <Router>
+    <Router basename="/pamomo-blog">
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<PostList />} />

@@ -27,7 +27,7 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v3
         with:
-          version: 8 # 또는 최신 버전 'latest'
+          version: 9 # 또는 최신 버전 'latest'
 
       - name: Set up Node
         uses: actions/setup-node@v4
